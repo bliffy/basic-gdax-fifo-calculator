@@ -1,0 +1,65 @@
+
+This is an extremely primitive gain/loss calculator
+for processing csv files exported from GDAX.
+Expected CSV header layout is derived from records made
+available as of Feb 2018.
+
+It requires a full history of purchases and sales. -
+If a full history is not possible, you may augment your
+records by adding new entries for historic
+purchases/sales.
+Just follow the same format as the existing csv, and 
+ensure any historic records have IDs and timestamps
+that predate your real records.
+(If you purchased your currency via CoinBase or otherwise
+deposited it into GDAX from any external source, this is
+something you'll have to create additional records to 
+represent. NOTE: The Deposit/Withdrawal type records
+included by GDAX are not useful for calculating 
+gains/losses, and thus, are ignored.)
+
+Eg:
+type,time,amount,balance,amount/balance unit,transfer id,trade id,order id
+match,2014-01-01T00:00:00.000Z,-200.0,0.0,USD,,1,0
+match,2014-01-01T00:00:00.000Z,0.7547,0.0,BTC,,1,0
+
+In the above example, both records share the same ID (1)
+because they are both part of the same transaction. They
+denote a payment of $200 USD to receive 0.7547 BTC.
+For additional fake transactions, further unique IDs are
+needed. (ex: 2, 3, 4, ...)
+
+Any transactions found in your records that do not cross
+USD will make it more difficult to estimate the 
+associated fiot value. This code attempts to improvise
+by looking for other transactions in the same currency
+that fall nearby in time. Messages about these estimates
+are printed to stderr. Use discretion.
+(As of Feb 2018, "like kind" rules do not apply to virtual currencies such as BTC.)
+Likewise, your fees will be converted to USD as closely as possible.
+
+While attempting to apply a basic FIFO algorithm to your
+records, any discrepancies that arise will generate
+warnings to stderr. These discrepancies occur when your
+records indicate a sale of assets that excede your
+indicated holdings. This can be a result of either
+missing records, or estimation error from the fiot problem
+described above.
+Again, use discretion. The more errors you have, the more inaccurate your results will be.
+
+Your output records are printed to stdout, and can be capture via pipe.
+Eg: ./runfifo my.csv 2017 > savehere.csv
+(This will also make it easier to see any errors being printed during evaluation.)
+
+The sum of all fees for the requested year are included
+with the output to stderr. (Not dumped to file in the
+above example.)
+
+Output includes the number of 24-hour days between each
+acquisition and sale. In theory, these should assist in
+determining which items are short or long-term.
+This value does not however take midnight boundaries or
+leap years into account.
+You are responsible for determining if and how these
+values may be used for your purposes.
+
