@@ -35,8 +35,10 @@ associated fiot value. This code attempts to improvise
 by looking for other transactions in the same currency
 that fall nearby in time. Messages about these estimates
 are printed to stderr. Use discretion.
-(As of Feb 2018, "like kind" rules do not apply to virtual currencies such as BTC.)
-Likewise, your fees will be converted to USD as closely as possible.
+(As of Feb 2018, "like kind" rules do not apply to virtual
+currencies such as BTC.)
+Likewise, your fees will be converted to USD as closely 
+as possible.
 
 While attempting to apply a basic FIFO algorithm to your
 records, any discrepancies that arise will generate
@@ -45,11 +47,14 @@ records indicate a sale of assets that excede your
 indicated holdings. This can be a result of either
 missing records, or estimation error from the fiot problem
 described above.
-Again, use discretion. The more errors you have, the more inaccurate your results will be.
+Again, use discretion. The more errors you have, the more
+inaccurate your results will be.
 
-Your output records are printed to stdout, and can be capture via pipe.
+Your output records are printed to stdout, and can be
+captured via pipe.
 Eg: ./runfifo my.csv 2017 > savehere.csv
-(This will also make it easier to see any errors being printed during evaluation.)
+(This will also make it easier to see any errors being
+printed during evaluation.)
 
 The sum of all fees for the requested year are included
 with the output to stderr. (Not dumped to file in the
